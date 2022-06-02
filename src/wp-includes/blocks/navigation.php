@@ -543,12 +543,20 @@ function render_block_core_navigation( $attributes, $content, $block ) {
 
 	$inner_blocks_html = '';
 	$is_list_open      = false;
+	$containable_blocks = array(
+		'core/navigation-link',
+		'core/home-link',
+		'core/site-title',
+		'core/site-logo',
+		'core/navigation-submenu',
+	);
+	$containable_blocks = apply_filters( 'block_core_navigation_contained_blocks', $containable_blocks );
 	foreach ( $inner_blocks as $inner_block ) {
-		if ( ( 'core/navigation-link' === $inner_block->name || 'core/home-link' === $inner_block->name || 'core/site-title' === $inner_block->name || 'core/site-logo' === $inner_block->name || 'core/navigation-submenu' === $inner_block->name ) && ! $is_list_open ) {
+		if ( in_array( $inner_block->name, $containable_blocks ) && ! $is_list_open ) {
 			$is_list_open       = true;
 			$inner_blocks_html .= '<ul class="wp-block-navigation__container">';
 		}
-		if ( 'core/navigation-link' !== $inner_block->name && 'core/home-link' !== $inner_block->name && 'core/site-title' !== $inner_block->name && 'core/site-logo' !== $inner_block->name && 'core/navigation-submenu' !== $inner_block->name && $is_list_open ) {
+		if ( in_array( $inner_block->name, $containable_blocks ) && $is_list_open ) {
 			$is_list_open       = false;
 			$inner_blocks_html .= '</ul>';
 		}
